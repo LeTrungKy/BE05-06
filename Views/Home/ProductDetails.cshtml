@@ -1,0 +1,55 @@
+﻿@model BE05_06.Models.ViewModel.ProductDetailsVM
+
+@{
+    ViewBag.Title = "ProductDetails";
+}
+
+<link rel="stylesheet" type="text/css" href="~/Content/myStyle/CustomerDetailProduct.css" />
+
+<div class="container-fluid pro">
+    <div class="row">
+        <div class="col-md-3 pro-section">
+            <img src="@Url.Content(string.IsNullOrEmpty(Model.product.ProductImage) ? "~/Content/images/default_img.png" : Model.product.ProductImage)" />
+        </div>
+        <div class="col-md-5 pro-section">
+            <div>
+                <h4><strong>@Html.DisplayFor(model => model.product.ProductName)</strong></h4>
+                <p class="pro-sale">Đã bán:&nbsp; @Model.product.OrderDetails.Count</p>
+                <p class="pro-price">@Model.product.ProductPrice.ToString("C")</p>
+                <p>Tủ sách:&nbsp;@Model.product.Category.CategoryName</p>
+                <hr />
+                <h5><strong>Mô tả</strong></h5>
+                <p> @Model.product.ProductDescription </p>
+            </div>
+            <hr />
+
+            <div>@Html.Partial("_PVRelatedProduct", Model)</div>
+        </div>
+        <div class="col-md-3 pro-section">
+            <div class="form-group">
+                @using (Html.BeginForm("ProductDetails", "Home", FormMethod.Get))
+                {
+                    <input type="hidden" name="id" value="@Model.product.ProductID" />
+
+                    <h4><strong>Số lượng</strong> </h4>
+                    <p>
+                        @Html.TextBoxFor(model => model.quantity, new
+                        { @class = "form-control", @type = "number", @min = 1 })
+                    </p>
+
+                    <h4><strong>Tạm tính</strong> </h4>
+                    <p>@Model.estimatedValue.ToString("N0")</p>
+
+                    <p>
+                        <button type="submit" class="btn btn-secondary">Cập nhật</button>
+                        @Html.ActionLink("Thêm vào giỏ hàng", "AddToCart", "Cart",
+                            new { id = Model.product.ProductID, quantity = Model.quantity },
+                            new { @class = "btn btn-info" })
+                    </p>
+                }
+                <hr />
+            </div>
+            <div>@Html.Partial("_PVTopProduct", Model)</div>
+        </div>
+    </div>
+</div>
